@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Pilih Role Mobile Legends</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #f4f4f4;
+    }
+
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+    }
+
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .start-btn {
+      background: #007BFF;
+      color: white;
+      border: none;
+    }
+
+    .start-btn:hover {
+      background: #0056b3;
+    }
+
+    .reset-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+    }
+
+    .reset-btn:hover {
+      background: #b02a37;
+    }
+
+    .result {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .history {
+      margin-top: 10px;
+      font-size: 12px;
+      color: gray;
+      text-align: left;
+      max-height: 100px;
+      overflow-y: auto;
+      border-top: 1px solid #ddd;
+      padding-top: 5px;
+    }
+
+    .history p {
+      margin: 3px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Pembagian Role MLBB</h2>
+    <input type="text" id="nama1" placeholder="Nama Pemain 1">
+    <input type="text" id="nama2" placeholder="Nama Pemain 2">
+    <input type="text" id="nama3" placeholder="Nama Pemain 3">
+    <input type="text" id="nama4" placeholder="Nama Pemain 4">
+    <input type="text" id="nama5" placeholder="Nama Pemain 5">
+    <button class="start-btn" onclick="mulai()">Tentukan Role</button>
+    <button class="reset-btn" onclick="resetGame()">Reset</button>
+    <p class="result" id="hasil"></p>
+    <div class="history" id="history">
+      <strong>History:</strong>
+    </div>
+  </div>
+
+  <script>
+    let roles = ["Goldlaner", "Explaner", "Roam", "Jungler", "Midlaner"];
+    let assignedRoles = {};
+
+    function mulai() {
+      if (Object.keys(assignedRoles).length >= 5) {
+        alert("Semua role sudah terisi!");
+        return;
+      }
+
+      let names = [
+        document.getElementById('nama1').value.trim(),
+        document.getElementById('nama2').value.trim(),
+        document.getElementById('nama3').value.trim(),
+        document.getElementById('nama4').value.trim(),
+        document.getElementById('nama5').value.trim()
+      ];
+
+      if (names.some(n => n === '')) {
+        alert("Harap isi semua nama!");
+        return;
+      }
+
+      let uniqueNames = new Set(names);
+      if (uniqueNames.size < 5) {
+        alert("Nama tidak boleh sama!");
+        return;
+      }
+
+      let availableRoles = [...roles];
+      assignedRoles = {};
+
+      names.forEach(name => {
+        let randomIndex = Math.floor(Math.random() * availableRoles.length);
+        let role = availableRoles[randomIndex];
+
+        assignedRoles[name] = role;
+        availableRoles.splice(randomIndex, 1);
+      });
+
+      tampilkanHasil();
+    }
+
+    function tampilkanHasil() {
+      let hasilDiv = document.getElementById('hasil');
+      let historyDiv = document.getElementById('history');
+
+      hasilDiv.innerHTML = "Hasil Pembagian Role:";
+      historyDiv.innerHTML = "<strong>History:</strong>";
+
+      for (let name in assignedRoles) {
+        let resultText = `✅ ${name} = ${assignedRoles[name]}`;
+
+        let resultP = document.createElement('p');
+        resultP.innerText = resultText;
+        historyDiv.appendChild(resultP);
+      }
+    }
+
+    function resetGame() {
+      assignedRoles = {};
+      document.getElementById('hasil').innerText = "";
+      document.getElementById('history').innerHTML = "<strong>History:</strong>";
+
+      // Reset input fields
+      document.getElementById('nama1').value = '';
+      document.getElementById('nama2').value = '';
+      document.getElementById('nama3').value = '';
+      document.getElementById('nama4').value = '';
+      document.getElementById('nama5').value = '';
+    }
+  </script>
+
+</body>
+</html>
